@@ -234,6 +234,7 @@ srouces body =
     {
       fetchgit,
       fetchurl,
+      fetchzip,
       fetchFromGitHub,
       dockerTools,
     }:

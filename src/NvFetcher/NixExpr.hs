@@ -128,7 +128,7 @@ nixFetcher = \case
     |]
   (FetchTarball (quote -> url) (coerce quote -> sha256)) ->
     [trimming|
-          fetchTarball {
+          fetchzip {
             url = $url;
             sha256 = $sha256;
           }
