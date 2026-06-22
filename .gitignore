@@ -59,3 +59,5 @@ sources.nix
 result
 result-doc
 keyfile.toml
+
+.direnv
