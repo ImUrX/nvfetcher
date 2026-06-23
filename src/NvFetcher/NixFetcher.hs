@@ -95,6 +95,17 @@ runNixPrefetchUrl url unpack name = do
     [x] -> sha256ToSri x
     _ -> fail $ "Failed to parse output from nix-prefetch-url: " <> T.unpack out
 
+runNixPrefetchZip :: Text -> Action Checksum
+runNixPrefetchZip url = do
+  (CmdTime t, Stdout (T.decodeUtf8 -> out), CmdLine c) <-
+    quietly $
+      command [EchoStderr False] "prefetchzip" $
+        [T.unpack url]
+  putVerbose $ "Finishing running " <> c <> ", took " <> show t <> "s"
+  case takeWhile (not . T.null) $ reverse $ T.lines out of
+    [x] -> pure $ coerce x
+    _ -> fail $ "Failed to parse output from prefetchzip: " <> T.unpack out
+
 newtype FetchedGit = FetchedGit {sha256 :: Text}
   deriving (Show, Generic, A.FromJSON)
 
@@ -133,7 +144,7 @@ runFetcher = \case
     result <- runNixPrefetchUrl _furl False _name
     pure FetchUrl {_sha256 = result, ..}
   FetchTarball {..} -> do
-    result <- runNixPrefetchUrl _furl True mempty
+    result <- runNixPrefetchZip _furl
     pure FetchTarball {_sha256 = result, ..}
   FetchDocker {..} -> do
     (CmdTime t, Stdout out, CmdLine c) <-

@@ -37,6 +37,7 @@
             nix-prefetch-git
             nix-prefetch-docker
             cabal2nix # cd nix && cabal2nix ../. > default.nix && ..
+            (callPackage ./nix/prefetchzip.nix { })
           ]).envFunc
             { };
         packages.nvfetcher-lib =
@@ -48,6 +49,7 @@
           });
         packages.ghcWithNvfetcher = mkShell {
           buildInputs = [
+            (callPackage ./nix/prefetchzip.nix { })
             nix-prefetch-git
             nix-prefetch-docker
             nvchecker
@@ -81,6 +83,7 @@
                               nvchecker
                               nix-prefetch-git
                               nix-prefetch-docker
+                              (callPackage ./nix/prefetchzip.nix { })
                             ]
                           }"
                       '';
